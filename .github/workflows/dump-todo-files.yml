@@ -1,0 +1,21 @@
+name: dump-todo-files
+on:
+  workflow_dispatch:
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+          fetch-depth: 0
+      - name: Show changed Python files and TODO context
+        run: |
+          echo '=== changed files ==='
+          git diff --name-only main...dev
+          echo '=== utils.py ==='
+          nl -ba luffy/deepscaler/utils.py
+          echo '=== protocol.py lines 90-165 ==='
+          nl -ba luffy/verl/verl/protocol.py | sed -n '90,165p'
+          echo '=== TODO grep in changed files ==='
+          grep -nE 'TODO' luffy/deepscaler/utils.py luffy/verl/verl/protocol.py
